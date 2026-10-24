@@ -1,0 +1,22 @@
+name: UniMatch CI
+
+on:
+  push:
+    branches: [main, feat/fase-4-implementacion]
+  pull_request:
+    branches: [main, feat/fase-4-implementacion]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore
+        run: dotnet restore UniMatch.sln
+      - name: Build
+        run: dotnet build UniMatch.sln --configuration Release --no-restore
+      - name: Test
+        run: dotnet test tests/UniMatch.Tests/UniMatch.Tests.csproj --configuration Release --no-build --verbosity normal
