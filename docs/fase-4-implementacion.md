@@ -13,8 +13,23 @@ La solución se implementó con .NET 8 Windows Forms y almacenamiento en memoria
 - Formularios con archivos `.Designer.cs` editables en Visual Studio.
 - Pruebas automatizadas para compatibilidad, duplicados, cupos y relaciones.
 - GitHub Actions en Windows para restaurar, compilar y ejecutar pruebas.
+- Datos de ejemplo cargados una sola vez al iniciar la aplicación.
+- Panel principal con contadores reales y tablas con encabezados, filas y acciones diferenciadas.
 
 La información se pierde al cerrar la aplicación, conforme al alcance de la Fase 2.
+
+## Datos de ejemplo
+
+La carga está centralizada en `src/UniMatch/Controlador/DatosEjemplo.cs`, en el método `DatosEjemplo.Cargar()`. `Program.Main` lo invoca antes de abrir `FrmPrincipal`; el método usa una bandera interna para no duplicar datos aunque se abran nuevamente los formularios.
+
+Incluye 10 estudiantes, 6 grupos y 9 inscripciones válidas. El conjunto contiene:
+
+- El grupo `101` lleno.
+- El grupo `105` sin participantes.
+- Grupos presenciales y virtuales.
+- Estudiantes con horarios incompatibles con algunos grupos para probar rechazos.
+
+Para iniciar la aplicación sin datos de ejemplo, cambie `DatosEjemplo.Habilitados` a `false` antes de la llamada a `DatosEjemplo.Cargar()` en `Program.cs`. Las listas continuarán funcionando normalmente para registrar datos manualmente.
 
 ## Spec Kit y Copilot
 

@@ -8,7 +8,7 @@ public partial class FrmEditGrupo : Form
     private readonly bool editar;
     public FrmEditGrupo(GrupoEstudio? grupo = null)
     {
-        editar = grupo is not null; InitializeComponent(); Ui.Preparar(this, editar ? "Modificar grupo" : "Nuevo grupo");
+        editar = grupo is not null; InitializeComponent(); Ui.Preparar(this, editar ? "Modificar grupo" : "Nuevo grupo"); ClientSize = new Size(720, 560); Ui.ConfigurarCampos(this);
         if (grupo is not null)
         {
             txtCodigo.Text = grupo.Codigo.ToString(); txtCodigo.Enabled = false; txtNombre.Text = grupo.Nombre; txtAsignatura.Text = grupo.Asignatura;

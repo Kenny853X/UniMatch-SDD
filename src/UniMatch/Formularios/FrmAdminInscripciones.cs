@@ -4,8 +4,12 @@ namespace UniMatch.Formularios;
 
 public partial class FrmAdminInscripciones : Form
 {
-    public FrmAdminInscripciones() { InitializeComponent(); Ui.Preparar(this, "Inscripciones"); Load += (_, _) => Cargar(); }
-    private void Cargar() => grid.DataSource = TListaInscripcion.Lista.Select(i => { var e = TListaEstudiante.Buscar(i.CodigoEstudiante)!; var g = TListaGrupoEstudio.Buscar(i.CodigoGrupo)!; return new { CodigoEstudiante = e.Codigo, Estudiante = e.NombreCompleto, CodigoGrupo = g.Codigo, Grupo = g.Nombre, g.Asignatura, Dia = g.Dia, Horario = g.HoraInicio.ToString("HH:mm") + " - " + g.HoraFin.ToString("HH:mm") }; }).ToList();
+    public FrmAdminInscripciones() { InitializeComponent(); Ui.Preparar(this, "Inscripciones"); ClientSize = new Size(1240, 650); Load += (_, _) => Cargar(); }
+    private void Cargar()
+    {
+        grid.DataSource = TListaInscripcion.Lista.Select(i => { var e = TListaEstudiante.Buscar(i.CodigoEstudiante)!; var g = TListaGrupoEstudio.Buscar(i.CodigoGrupo)!; return new { CodigoEstudiante = e.Codigo, Estudiante = e.NombreCompleto, CodigoGrupo = g.Codigo, Grupo = g.Nombre, g.Asignatura, Dia = g.Dia, Horario = g.HoraInicio.ToString("HH:mm") + " - " + g.HoraFin.ToString("HH:mm") }; }).ToList();
+        Ui.Encabezados(grid, ("CodigoEstudiante", "Código estudiante"), ("Estudiante", "Estudiante"), ("CodigoGrupo", "Código grupo"), ("Grupo", "Grupo"), ("Asignatura", "Asignatura"), ("Dia", "Día"), ("Horario", "Horario"));
+    }
     private void CancelarClick(object? sender, EventArgs e)
     {
         if (grid.CurrentRow?.Cells["CodigoEstudiante"].Value is not int estudiante || grid.CurrentRow.Cells["CodigoGrupo"].Value is not int grupo) { Ui.Avisar("Seleccione una inscripción.", true); return; }

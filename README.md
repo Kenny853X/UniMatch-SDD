@@ -17,6 +17,8 @@ Sistema de grupos de estudio para estudiantes de la UTMACH desarrollado en C# Wi
 
 Los datos se mantienen únicamente durante la sesión y se pierden al cerrar la aplicación.
 
+Al iniciar se cargan datos de ejemplo desde `src/UniMatch/Controlador/DatosEjemplo.cs`: 10 estudiantes, 6 grupos y 9 inscripciones. La carga es idempotente y se puede desactivar estableciendo `DatosEjemplo.Habilitados = false` en `Program.cs`.
+
 ## Probar
 
 Desde una terminal ubicada en la raíz:
