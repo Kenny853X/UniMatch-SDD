@@ -1,0 +1,32 @@
+
+name: UniMatch CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Compilar y ejecutar pruebas
+    runs-on: windows-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Instalar .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restaurar dependencias
+        run: dotnet restore UniMatch.sln
+
+      - name: Compilar solución
+        run: dotnet build UniMatch.sln --configuration Release --no-restore
+
+      - name: Ejecutar pruebas xUnit
+        run: dotnet test UniMatch.sln --configuration Release --no-build --verbosity normal
