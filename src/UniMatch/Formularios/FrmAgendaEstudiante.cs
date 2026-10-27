@@ -81,15 +81,26 @@ public partial class FrmAgendaEstudiante : Form
             ("Horario", "Horario"), ("Modalidad", "Modalidad"));
     }
 
-    private void CargarSemana(IReadOnlyCollection<TListaInscripcion.ReunionAgenda> reuniones)
+
+    private void CargarSemana(
+        IReadOnlyCollection<TListaInscripcion.ReunionAgenda> reuniones)
     {
         for (var indice = 0; indice < panelesDia.Length; indice++)
         {
             var panel = panelesDia[indice];
             panel.Controls.Clear();
+
             var dia = DiasSemana[indice];
+
             var delDia = reuniones
-                .Where(reunion => string.Equals(reunion.Dia.Trim(), dia, StringComparison.OrdinalIgnoreCase))
+                .Where(reunion =>
+                    string.Compare(
+                        reunion.Dia.Trim(),
+                        dia,
+                        System.Globalization.CultureInfo.GetCultureInfo("es-ES"),
+                        System.Globalization.CompareOptions.IgnoreCase |
+                        System.Globalization.CompareOptions.IgnoreNonSpace
+                    ) == 0)
                 .ToList();
 
             var encabezado = new Label
@@ -103,6 +114,7 @@ public partial class FrmAgendaEstudiante : Form
                 Font = new Font("Segoe UI", 9F, FontStyle.Bold),
                 Margin = new Padding(0)
             };
+
             var reunionesPanel = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
@@ -112,6 +124,8 @@ public partial class FrmAgendaEstudiante : Form
                 Padding = new Padding(2),
                 BackColor = Ui.Surface
             };
+
+            // Agregar primero el contenido y después el encabezado.
             panel.Controls.Add(reunionesPanel);
             panel.Controls.Add(encabezado);
 
@@ -119,14 +133,16 @@ public partial class FrmAgendaEstudiante : Form
             {
                 reunionesPanel.Controls.Add(new Label
                 {
-                    Text = "Sin reuniones", AutoSize = false, Width = 140,
+                    Text = "Sin reuniones",
+                    Width = 140,
                     Height = 58,
                     TextAlign = ContentAlignment.MiddleCenter,
                     ForeColor = Ui.MutedText,
-                    Font = new Font("Segoe UI", 9F, FontStyle.Italic),
-                    Padding = new Padding(4),
+                    Font = new Font(
+                        "Segoe UI", 9F, FontStyle.Italic),
                     Margin = new Padding(2)
                 });
+
                 continue;
             }
 
@@ -134,36 +150,58 @@ public partial class FrmAgendaEstudiante : Form
             {
                 var bloque = new Panel
                 {
-                    Dock = DockStyle.Top,
-                    Height = 92,
-                    BackColor = Ui.Surface,
+                    Width = 160,
+                    Height = 112,
+                    BackColor = Ui.LightBlue,
                     BorderStyle = BorderStyle.FixedSingle,
                     Padding = new Padding(8),
-                    Margin = new Padding(2),
-                    Width = 140
+                    Margin = new Padding(3, 6, 3, 6)
                 };
+
                 var contenido = new TableLayoutPanel
                 {
                     Dock = DockStyle.Fill,
                     ColumnCount = 1,
                     RowCount = 4,
-                    Margin = new Padding(0),
-                    BackColor = Ui.Surface
+                    BackColor = Ui.LightBlue,
+                    Margin = Padding.Empty
                 };
-                contenido.RowStyles.Add(new RowStyle(SizeType.Percent, 28));
-                contenido.RowStyles.Add(new RowStyle(SizeType.Percent, 25));
-                contenido.RowStyles.Add(new RowStyle(SizeType.Percent, 25));
-                contenido.RowStyles.Add(new RowStyle(SizeType.Percent, 22));
-                contenido.Controls.Add(Celda(reunion.NombreGrupo, Ui.Navy, true), 0, 0);
-                contenido.Controls.Add(Celda(reunion.Asignatura, Ui.Text), 0, 1);
-                contenido.Controls.Add(Celda(
-                    $"{reunion.HoraInicio:HH\\:mm} - {reunion.HoraFin:HH\\:mm}", Ui.Blue, true), 0, 2);
-                contenido.Controls.Add(Celda(reunion.Modalidad, Ui.MutedText), 0, 3);
+
+                contenido.ColumnStyles.Add(
+                    new ColumnStyle(SizeType.Percent, 100F));
+
+                contenido.RowStyles.Add(
+                    new RowStyle(SizeType.Percent, 35F));
+
+                contenido.RowStyles.Add(
+                    new RowStyle(SizeType.Percent, 25F));
+
+                contenido.RowStyles.Add(
+                    new RowStyle(SizeType.Percent, 20F));
+
+                contenido.RowStyles.Add(
+                    new RowStyle(SizeType.Percent, 20F));
+
+                contenido.Controls.Add(
+                    Celda(reunion.NombreGrupo, Ui.Navy, true), 0, 0);
+
+                contenido.Controls.Add(
+                    Celda(reunion.Asignatura, Ui.Text), 0, 1);
+
+                contenido.Controls.Add(
+                    Celda(
+                        $"{reunion.HoraInicio:HH\\:mm} - {reunion.HoraFin:HH\\:mm}",
+                        Ui.Blue, true), 0, 2);
+
+                contenido.Controls.Add(
+                    Celda(reunion.Modalidad, Ui.MutedText), 0, 3);
+
                 bloque.Controls.Add(contenido);
                 reunionesPanel.Controls.Add(bloque);
             }
         }
     }
+
 
     private void LimpiarAgenda()
     {
