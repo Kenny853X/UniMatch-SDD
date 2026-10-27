@@ -22,7 +22,7 @@ public static class DatosEjemplo
             E(7, "Sofía", "Mendoza", "Ingeniería de Sistemas", "Inteligencia Artificial", "Viernes", 9, 13),
             E(8, "Andrés", "Torres", "Diseño Digital", "Experiencia de Usuario", "Sábado", 8, 12),
             E(9, "María", "Zambrano", "Ingeniería Civil", "Matemática", "Martes", 15, 17),
-            E(10, "Joaquín", "Salazar", "Ingeniería de Software", "Bases de Datos", "Miércoles", 10, 14)
+            E(10, "Joaquín", "Salazar", "Ingeniería de Software", "Bases de Datos", "Miércoles", 8, 14)
         };
         foreach (var estudiante in estudiantes) TListaEstudiante.Agregar(estudiante);
 
