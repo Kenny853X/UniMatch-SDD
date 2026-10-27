@@ -4,6 +4,15 @@ namespace UniMatch.Controlador;
 
 public static class TListaInscripcion
 {
+    public sealed record ReunionAgenda(
+        int CodigoGrupo,
+        string NombreGrupo,
+        string Asignatura,
+        string Dia,
+        TimeOnly HoraInicio,
+        TimeOnly HoraFin,
+        string Modalidad);
+
     public static List<Inscripcion> Lista { get; } = [];
 
     public static IEnumerable<Inscripcion> PorEstudiante(int codigo) =>
@@ -11,6 +20,23 @@ public static class TListaInscripcion
 
     public static IEnumerable<Inscripcion> PorGrupo(int codigo) =>
         Lista.Where(x => x.CodigoGrupo == codigo);
+
+    public static IEnumerable<ReunionAgenda> AgendaDeEstudiante(int codigoEstudiante) =>
+        from inscripcion in PorEstudiante(codigoEstudiante)
+        join grupo in TListaGrupoEstudio.Lista on inscripcion.CodigoGrupo equals grupo.Codigo
+        orderby OrdenDia(grupo.Dia), grupo.HoraInicio, grupo.HoraFin, grupo.Codigo
+        select new ReunionAgenda(
+            grupo.Codigo,
+            grupo.Nombre,
+            grupo.Asignatura,
+            grupo.Dia,
+            grupo.HoraInicio,
+            grupo.HoraFin,
+            grupo.Modalidad);
+
+    public static double HorasSemanales(int codigoEstudiante) =>
+        AgendaDeEstudiante(codigoEstudiante)
+            .Sum(reunion => (reunion.HoraFin - reunion.HoraInicio).TotalHours);
 
     public static bool Existe(int codigoEstudiante, int codigoGrupo) =>
         Lista.Any(x => x.CodigoEstudiante == codigoEstudiante && x.CodigoGrupo == codigoGrupo);
@@ -118,4 +144,17 @@ public static class TListaInscripcion
         Lista.RemoveAll(x => x.CodigoGrupo == codigo);
 
     private static string Normalizar(string texto) => texto.Trim();
+
+    private static int OrdenDia(string dia) =>
+        dia.Trim().ToLowerInvariant() switch
+        {
+            "lunes" => 1,
+            "martes" => 2,
+            "miércoles" or "miercoles" => 3,
+            "jueves" => 4,
+            "viernes" => 5,
+            "sábado" or "sabado" => 6,
+            "domingo" => 7,
+            _ => 8
+        };
 }
