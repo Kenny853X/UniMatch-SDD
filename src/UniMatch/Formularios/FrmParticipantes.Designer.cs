@@ -12,7 +12,7 @@ partial class FrmParticipantes
         cboGrupo = new() { DropDownStyle = ComboBoxStyle.DropDownList, Dock = DockStyle.Fill };
         grid = new DataGridView { Dock = DockStyle.Fill, AutoGenerateColumns = true };
         lblEstado = Ui.EstadoVacio("Seleccione un grupo para consultar sus participantes.");
-        lblResumen = new Label { Dock = DockStyle.Fill, AutoSize = false, Padding = new Padding(18, 8, 18, 8), ForeColor = Ui.Navy, Font = new Font("Segoe UI", 10F, FontStyle.Bold), BackColor = Ui.LightBlue };
+        lblResumen = new Label { Dock = DockStyle.Fill, AutoSize = false, Padding = new Padding(18, 8, 18, 8), TextAlign = ContentAlignment.MiddleLeft, ForeColor = Ui.Navy, Font = new Font("Segoe UI", 10F, FontStyle.Bold), BackColor = Ui.LightBlue };
         btnCerrar = Ui.BotonCancelar("Cerrar");
         var selector = new TableLayoutPanel { Dock = DockStyle.Top, Height = 66, Padding = new Padding(24, 12, 24, 8), ColumnCount = 2 };
         selector.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22)); selector.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 78));
