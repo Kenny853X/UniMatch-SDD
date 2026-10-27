@@ -6,7 +6,8 @@ partial class FrmEditGrupo
     private System.ComponentModel.IContainer? components;
     private TextBox txtCodigo = null!, txtNombre = null!, txtAsignatura = null!;
     private ComboBox cboDia = null!, cboModalidad = null!;
-    private DateTimePicker dtInicio = null!, dtFin = null!; private NumericUpDown nudCupo = null!;
+    private DateTimePicker dtInicio = null!, dtFin = null!;
+    private NumericUpDown nudCupo = null!;
     private Button btnGuardar = null!, btnCancelar = null!;
 
     private void InitializeComponent()
@@ -20,28 +21,37 @@ partial class FrmEditGrupo
         dtInicio = new() { Format = DateTimePickerFormat.Time, ShowUpDown = true };
         dtFin = new() { Format = DateTimePickerFormat.Time, ShowUpDown = true };
         nudCupo = new() { Minimum = 1, Maximum = 1000 };
-        btnGuardar = Ui.Boton("Guardar"); btnCancelar = Ui.Boton("Cancelar", secundario: true);
+        btnGuardar = Ui.BotonPrimario("Guardar cambios"); btnCancelar = Ui.BotonCancelar();
 
-        var fields = new TableLayoutPanel
-        {
-            Dock = DockStyle.Fill, Padding = new Padding(18), ColumnCount = 2, RowCount = 8
-        };
-        fields.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 34));
-        fields.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 66));
-        string[] labels = ["Código", "Nombre del grupo", "Asignatura", "Día de reunión", "Hora de inicio", "Hora de finalización", "Modalidad", "Cupo máximo"];
-        Control[] controls = [txtCodigo, txtNombre, txtAsignatura, cboDia, dtInicio, dtFin, cboModalidad, nudCupo];
-        for (var i = 0; i < labels.Length; i++)
-        {
-            fields.RowStyles.Add(new RowStyle(SizeType.Percent, 12.5F));
-            fields.Controls.Add(new Label { Text = labels[i], AutoSize = true, Anchor = AnchorStyles.Left }, 0, i);
-            fields.Controls.Add(controls[i], 1, i); controls[i].Dock = DockStyle.Fill;
-        }
-
-        var datos = new GroupBox { Text = "Configuración del grupo", Dock = DockStyle.Fill, Padding = new Padding(4) };
-        datos.Controls.Add(fields);
-        var buttons = new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 62, Padding = new Padding(18, 10, 18, 10) };
-        buttons.Controls.AddRange([btnGuardar, btnCancelar]);
-        Controls.Add(buttons); Controls.Add(datos); Controls.Add(Ui.Titulo("Datos del grupo"));
+        var general = Campos(("Código de grupo", txtCodigo), ("Nombre del grupo", txtNombre), ("Asignatura", txtAsignatura));
+        var programacion = Campos(("Día de reunión", cboDia), ("Hora de inicio", dtInicio), ("Hora de finalización", dtFin), ("Modalidad", cboModalidad), ("Cupo máximo", nudCupo));
+        var secciones = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 2, Padding = new Padding(28, 8, 28, 12) };
+        secciones.RowStyles.Add(new RowStyle(SizeType.Percent, 42)); secciones.RowStyles.Add(new RowStyle(SizeType.Percent, 58));
+        secciones.Controls.Add(Seccion("Información general", general), 0, 0);
+        secciones.Controls.Add(Seccion("Programación y capacidad", programacion), 0, 1);
+        var encabezado = Ui.Encabezado("Datos del grupo", "Define el horario, modalidad y capacidad del grupo de estudio.");
+        var acciones = Ui.BarraAcciones(btnGuardar, btnCancelar);
+        Controls.Add(secciones); Controls.Add(acciones); Controls.Add(encabezado);
+        Ui.ConfigurarCampos(this);
         btnCancelar.Click += (_, _) => DialogResult = DialogResult.Cancel; btnGuardar.Click += GuardarClick;
+    }
+
+    private static GroupBox Seccion(string titulo, Control contenido) => new()
+    {
+        Text = titulo, Dock = DockStyle.Fill, ForeColor = Ui.Navy, Padding = new Padding(12),
+        Font = new Font("Segoe UI", 10F, FontStyle.Bold), Controls = { contenido }
+    };
+
+    private static TableLayoutPanel Campos(params (string Etiqueta, Control Control)[] campos)
+    {
+        var tabla = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = campos.Length, Padding = new Padding(8, 4, 8, 4) };
+        tabla.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 34)); tabla.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 66));
+        for (var i = 0; i < campos.Length; i++)
+        {
+            tabla.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / campos.Length));
+            tabla.Controls.Add(new Label { Text = campos[i].Etiqueta, AutoSize = true, Anchor = AnchorStyles.Left, ForeColor = Ui.Text, Font = new Font("Segoe UI", 10F) }, 0, i);
+            campos[i].Control.Dock = DockStyle.Fill; tabla.Controls.Add(campos[i].Control, 1, i);
+        }
+        return tabla;
     }
 }

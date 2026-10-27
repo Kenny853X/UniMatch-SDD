@@ -4,10 +4,11 @@ namespace UniMatch.Formularios;
 
 public partial class FrmAdminGrupos : Form
 {
-    public FrmAdminGrupos() { InitializeComponent(); Ui.Preparar(this, "Grupos"); ClientSize = new Size(1280, 680); Load += (_, _) => Cargar(); }
+    public FrmAdminGrupos() { InitializeComponent(); Ui.Preparar(this, "Grupos"); ClientSize = new Size(1360, 720); MinimumSize = new Size(1050, 600); Load += (_, _) => Cargar(); }
     private void Cargar(string texto = "")
     {
         var grupos = TListaGrupoEstudio.BuscarPorAsignatura(texto).ToList();
+        lblConteo.Text = $"{grupos.Count} grupo{(grupos.Count == 1 ? "" : "s")}";
         grid.DataSource = grupos.Select(x => new { x.Codigo, x.Nombre, x.Asignatura, x.Dia, Horario = x.HoraInicio.ToString("HH:mm") + " - " + x.HoraFin.ToString("HH:mm"), x.Modalidad, x.CupoMaximo, Participantes = TListaGrupoEstudio.Participantes(x.Codigo), Disponibles = TListaGrupoEstudio.CuposDisponibles(x) }).ToList();
         lblEstado.Visible = grupos.Count == 0;
         if (lblEstado.Visible) lblEstado.BringToFront();

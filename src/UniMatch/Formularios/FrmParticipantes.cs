@@ -8,7 +8,7 @@ public partial class FrmParticipantes : Form
     public FrmParticipantes(int? codigoGrupo = null)
     {
         InitializeComponent(); Ui.Preparar(this, "Participantes");
-        ClientSize = new Size(980, 600);
+        ClientSize = new Size(1080, 680); MinimumSize = new Size(900, 580);
         cboGrupo.DataSource = TListaGrupoEstudio.Lista.ToList(); cboGrupo.DisplayMember = "Nombre";
         if (codigoGrupo is not null) cboGrupo.SelectedItem = TListaGrupoEstudio.Buscar(codigoGrupo.Value);
         Cargar();
@@ -21,6 +21,6 @@ public partial class FrmParticipantes : Form
         lblEstado.Visible = TListaGrupoEstudio.Participantes(grupo.Codigo) == 0;
         if (lblEstado.Visible) lblEstado.BringToFront();
         Ui.Encabezados(grid, ("Codigo", "Código"), ("NombreCompleto", "Estudiante"), ("Carrera", "Carrera"), ("Asignatura", "Asignatura"));
-        lblResumen.Text = $"Participantes: {TListaGrupoEstudio.Participantes(grupo.Codigo)} | Cupos disponibles: {TListaGrupoEstudio.CuposDisponibles(grupo)}";
+        lblResumen.Text = $"  {grupo.Nombre}   ·   Participantes: {TListaGrupoEstudio.Participantes(grupo.Codigo)}   ·   Cupos disponibles: {TListaGrupoEstudio.CuposDisponibles(grupo)}";
     }
 }
