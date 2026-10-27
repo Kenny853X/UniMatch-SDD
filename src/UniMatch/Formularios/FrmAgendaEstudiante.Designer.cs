@@ -1,6 +1,7 @@
 #nullable enable
 namespace UniMatch.Formularios;
 
+using UniMatch.Entidades;
 partial class FrmAgendaEstudiante
 {
     private ComboBox cboEstudiante = null!;
