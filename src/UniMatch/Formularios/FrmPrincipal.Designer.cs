@@ -27,7 +27,7 @@ partial class FrmPrincipal
             button.ForeColor = Color.White;
             button.FlatAppearance.MouseOverBackColor = Color.FromArgb(38, 72, 112);
         }
-        btnRecomendaciones.Enabled = false; btnAgenda.Enabled = false; btnReportes.Enabled = false;
+        btnAgenda.Enabled = false; btnReportes.Enabled = false;
         lblEstudiantes = Contador("0", "Estudiantes");
         lblGrupos = Contador("0", "Grupos de estudio");
         lblInscripciones = Contador("0", "Inscripciones");
@@ -74,6 +74,7 @@ partial class FrmPrincipal
         btnGrupos.Click += (_, _) => { using var form = new FrmAdminGrupos(); form.ShowDialog(this); ActualizarResumen(); };
         btnInscripciones.Click += (_, _) => { using var form = new FrmAdminInscripciones(); form.ShowDialog(this); ActualizarResumen(); };
         btnBuscar.Click += (_, _) => { using var form = new FrmBuscarGrupos(); form.ShowDialog(this); ActualizarResumen(); };
+        btnRecomendaciones.Click += (_, _) => { using var form = new FrmRecomendaciones(); form.ShowDialog(this); ActualizarResumen(); };
         btnSalir.Click += (_, _) => Close();
     }
 
