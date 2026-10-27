@@ -11,18 +11,18 @@ partial class FrmPrincipal
     private void InitializeComponent()
     {
         components = new System.ComponentModel.Container();
-        btnEstudiantes = Ui.BotonSecundario("  Estudiantes");
-        btnGrupos = Ui.BotonSecundario("  Grupos");
-        btnInscripciones = Ui.BotonSecundario("  Inscripciones");
-        btnBuscar = Ui.BotonSecundario("  Buscar grupos");
-        btnRecomendaciones = Ui.BotonSecundario("  Recomendaciones");
-        btnAgenda = Ui.BotonSecundario("  Mi agenda");
-        btnReportes = Ui.BotonSecundario("  Reportes");
-        btnSalir = Ui.Boton("  Salir", peligro: true);
+        btnEstudiantes = Ui.BotonSecundario("Estudiantes");
+        btnGrupos = Ui.BotonSecundario("Grupos");
+        btnInscripciones = Ui.BotonSecundario("Inscripciones");
+        btnBuscar = Ui.BotonSecundario("Buscar grupos");
+        btnRecomendaciones = Ui.BotonSecundario("Recomendaciones");
+        btnAgenda = Ui.BotonSecundario("Mi agenda");
+        btnReportes = Ui.BotonSecundario("Reportes");
+        btnSalir = Ui.Boton("Salir", peligro: true);
         foreach (var button in new[] { btnEstudiantes, btnGrupos, btnInscripciones, btnBuscar, btnRecomendaciones, btnAgenda, btnReportes })
         {
             button.Width = 210;
-            button.TextAlign = ContentAlignment.MiddleLeft;
+            button.TextAlign = ContentAlignment.MiddleCenter;
             button.BackColor = Ui.Navy;
             button.ForeColor = Color.White;
             button.FlatAppearance.MouseOverBackColor = Color.FromArgb(38, 72, 112);
@@ -41,7 +41,7 @@ partial class FrmPrincipal
         var marca = new Panel { Dock = DockStyle.Top, Height = 96, Padding = new Padding(22, 20, 12, 8), BackColor = Ui.Navy };
         marca.Controls.Add(new Label { Text = "UniMatch", AutoSize = true, ForeColor = Color.White, Font = new Font("Segoe UI", 22F, FontStyle.Bold) });
         marca.Controls.Add(new Label { Text = "GESTIÓN UNIVERSITARIA", AutoSize = true, ForeColor = Color.FromArgb(170, 214, 224), Font = new Font("Segoe UI", 8F, FontStyle.Bold), Location = new Point(2, 55) });
-        var menu = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown, WrapContents = false, Padding = new Padding(12, 18, 12, 12), BackColor = Ui.Navy };
+        var menu = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown, WrapContents = false, Padding = new Padding(8, 18, 8, 12), BackColor = Ui.Navy };
         menu.Controls.Add(new Label { Text = "NAVEGACIÓN", AutoSize = true, ForeColor = Color.FromArgb(160, 185, 210), Font = new Font("Segoe UI", 8F, FontStyle.Bold), Margin = new Padding(10, 0, 0, 8) });
         menu.Controls.AddRange([btnEstudiantes, btnGrupos, btnInscripciones, btnBuscar, btnRecomendaciones, btnAgenda, btnReportes]);
         var sidebar = new Panel { Dock = DockStyle.Left, Width = 238, BackColor = Ui.Navy };

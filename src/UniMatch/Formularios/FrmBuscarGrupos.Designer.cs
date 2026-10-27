@@ -35,22 +35,25 @@ partial class FrmBuscarGrupos
         var filtroHasta = Filtro("Hasta", dtpHasta);
         var filtros = new FlowLayoutPanel
         {
-            Dock = DockStyle.Top, Height = 128, WrapContents = true,
-            FlowDirection = FlowDirection.LeftToRight, Padding = new Padding(0, 0, 0, 8),
+            Dock = DockStyle.Top, Height = 132, WrapContents = true,
+            FlowDirection = FlowDirection.LeftToRight, Padding = new Padding(0, 4, 0, 8),
             Margin = new Padding(0)
         };
-        filtros.Controls.AddRange([filtroAsignatura, filtroDia, filtroModalidad, filtroCupos, chkHorario, filtroDesde, filtroHasta, btnBuscar, btnLimpiar, lblConteo]);
-
-        var encabezado = new Panel { Dock = DockStyle.Top, Height = 210, BackColor = Ui.Background, Padding = new Padding(24, 20, 24, 0) };
-        encabezado.Controls.Add(filtros);
-        encabezado.Controls.Add(Ui.Subtitulo("Combina asignatura, día, modalidad, horario y disponibilidad de cupos."));
-        encabezado.Controls.Add(Ui.Titulo("Búsqueda avanzada de grupos"));
-        encabezado.Controls[1].Location = new Point(0, 48);
-        encabezado.Controls[2].Location = new Point(0, 4);
+        filtros.Controls.AddRange([filtroAsignatura, filtroDia, filtroModalidad, filtroCupos, chkHorario, filtroDesde, filtroHasta]);
+        var encabezado = Ui.Encabezado("Búsqueda avanzada de grupos", "Combina asignatura, día, modalidad, horario y disponibilidad de cupos.");
+        var accionesBusqueda = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Top, Height = 62, WrapContents = false,
+            FlowDirection = FlowDirection.LeftToRight, Padding = new Padding(18, 8, 18, 8),
+            BackColor = Ui.Surface
+        };
+        accionesBusqueda.Controls.AddRange([btnBuscar, btnLimpiar, lblConteo]);
 
         var acciones = Ui.BarraAcciones(btnParticipantes, btnRegresar);
         Controls.Add(Ui.ContenedorTabla(grid, lblEstado));
         Controls.Add(acciones);
+        Controls.Add(accionesBusqueda);
+        Controls.Add(filtros);
         Controls.Add(encabezado);
         Ui.ConfigurarTabla(grid);
 
@@ -66,7 +69,14 @@ partial class FrmBuscarGrupos
         grid.CellFormatting += (_, e) =>
         {
             if (e.RowIndex < 0 || grid.Columns[e.ColumnIndex].Name != "Estado") return;
-            e.CellStyle.ForeColor = e.Value?.ToString() == "Disponible" ? Ui.Green : Ui.Red;
+            var disponible = e.Value?.ToString() == "Disponible";
+            e.CellStyle.BackColor = disponible ? Color.FromArgb(229, 245, 236) : Color.FromArgb(252, 234, 234);
+            e.CellStyle.ForeColor = disponible ? Color.FromArgb(22, 105, 70) : Color.FromArgb(145, 35, 35);
+            if (grid.Rows[e.RowIndex].Selected)
+            {
+                e.CellStyle.BackColor = Ui.SelectedBlue;
+                e.CellStyle.ForeColor = Color.White;
+            }
             e.CellStyle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
         };
         dtpDesde.Enabled = false;
@@ -88,9 +98,9 @@ partial class FrmBuscarGrupos
 
     private static Panel Filtro(string etiqueta, Control control)
     {
-        var panel = new Panel { Width = 150, Height = 52, Margin = new Padding(0, 0, 10, 4) };
-        panel.Controls.Add(new Label { Text = etiqueta, AutoSize = true, ForeColor = Ui.MutedText, Location = new Point(0, 0) });
-        control.Location = new Point(0, 22);
+        var panel = new Panel { Width = 150, Height = 60, Margin = new Padding(0, 0, 10, 4) };
+        panel.Controls.Add(new Label { Text = etiqueta, AutoSize = true, ForeColor = Ui.MutedText, Location = new Point(0, 2) });
+        control.Location = new Point(0, 24);
         panel.Controls.Add(control);
         return panel;
     }

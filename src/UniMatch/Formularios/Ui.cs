@@ -4,8 +4,9 @@ namespace UniMatch.Formularios;
 
 internal static class Ui
 {
-    public static readonly Color Navy = Color.FromArgb(22, 43, 74);
+    public static readonly Color Navy = Color.FromArgb(23, 45, 77);
     public static readonly Color Blue = Color.FromArgb(31, 111, 183);
+    public static readonly Color SelectedBlue = Color.FromArgb(53, 112, 175);
     public static readonly Color Turquoise = Color.FromArgb(24, 156, 164);
     public static readonly Color LightBlue = Color.FromArgb(232, 242, 252);
     public static readonly Color Green = Color.FromArgb(34, 139, 98);
@@ -67,14 +68,20 @@ internal static class Ui
         Margin = new Padding(0, 4, 0, 4)
     };
 
-    public static Button Boton(string texto, bool peligro = false, bool secundario = false) => new()
+    public static Button Boton(string texto, bool peligro = false, bool secundario = false)
     {
-        Text = texto, AutoSize = false, Height = 40, MinimumSize = new Size(118, 40),
-        Padding = new Padding(14, 0, 14, 0), BackColor = peligro ? Red : secundario ? Surface : Blue,
-        ForeColor = peligro || !secundario ? Color.White : Navy, FlatStyle = FlatStyle.Flat,
-        Font = new Font("Segoe UI", 9.5F, FontStyle.Bold), Cursor = Cursors.Hand,
-        FlatAppearance = { BorderSize = 0, MouseOverBackColor = LightBlue }
-    };
+        var ancho = TextRenderer.MeasureText(texto, new Font("Segoe UI", 9.5F, FontStyle.Bold)).Width + 32;
+        return new Button
+        {
+            Text = texto, AutoSize = false, Height = 42, Width = Math.Max(118, ancho),
+            MinimumSize = new Size(Math.Max(118, ancho), 42), Padding = new Padding(10, 0, 10, 0),
+            Margin = new Padding(6), TextAlign = ContentAlignment.MiddleCenter,
+            BackColor = peligro ? Red : secundario ? Surface : Blue,
+            ForeColor = peligro || !secundario ? Color.White : Navy, FlatStyle = FlatStyle.Flat,
+            Font = new Font("Segoe UI", 9.5F, FontStyle.Bold), Cursor = Cursors.Hand,
+            FlatAppearance = { BorderSize = 0, MouseOverBackColor = LightBlue }
+        };
+    }
 
     public static Button BotonPrimario(string texto) => Boton(texto);
     public static Button BotonSecundario(string texto) => Boton(texto, secundario: true);
@@ -98,7 +105,7 @@ internal static class Ui
     {
         var barra = new FlowLayoutPanel
         {
-            Dock = DockStyle.Bottom, Height = 68, Padding = new Padding(20, 12, 20, 12),
+            Dock = DockStyle.Bottom, Height = 72, Padding = new Padding(14, 9, 14, 9),
             BackColor = Surface, FlowDirection = FlowDirection.LeftToRight, WrapContents = false
         };
         barra.Controls.AddRange(controles);
@@ -122,15 +129,24 @@ internal static class Ui
         grid.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
         {
             BackColor = Navy, ForeColor = Color.White, Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-            Alignment = DataGridViewContentAlignment.MiddleLeft, Padding = new Padding(8, 0, 0, 0)
+            Alignment = DataGridViewContentAlignment.MiddleLeft, Padding = new Padding(8, 0, 8, 0),
+            SelectionBackColor = Navy, SelectionForeColor = Color.White
+        };
+        grid.RowHeadersDefaultCellStyle = new DataGridViewCellStyle
+        {
+            BackColor = Navy, ForeColor = Color.White, SelectionBackColor = Navy, SelectionForeColor = Color.White
         };
         grid.DefaultCellStyle = new DataGridViewCellStyle
         {
             BackColor = Surface, ForeColor = Text,
-            SelectionBackColor = LightBlue, SelectionForeColor = Navy,
+            SelectionBackColor = SelectedBlue, SelectionForeColor = Color.White,
             Padding = new Padding(8, 0, 8, 0), NullValue = "-"
         };
-        grid.AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle { BackColor = Color.FromArgb(248, 250, 253) };
+        grid.AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle
+        {
+            BackColor = Color.FromArgb(239, 246, 253), ForeColor = Text,
+            SelectionBackColor = SelectedBlue, SelectionForeColor = Color.White
+        };
         grid.RowTemplate.Height = 36; grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         grid.AllowUserToResizeRows = false; grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         grid.MultiSelect = false; grid.AllowUserToAddRows = false; grid.ReadOnly = true;
@@ -146,8 +162,21 @@ internal static class Ui
                 control.BackColor = Surface; control.ForeColor = Navy;
                 control.Font = new Font("Segoe UI", 10F);
             }
+            if (control is Button button) ConfigurarBoton(button);
             if (control.HasChildren) ConfigurarCampos(control);
         }
+    }
+
+    public static void ConfigurarBoton(Button button)
+    {
+        button.AutoSize = false;
+        button.Height = Math.Max(button.Height, 42);
+        button.MinimumSize = new Size(Math.Max(button.MinimumSize.Width, 118), button.Height);
+        button.TextAlign = ContentAlignment.MiddleCenter;
+        button.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+        button.Padding = new Padding(10, 0, 10, 0);
+        button.Margin = new Padding(6);
+        button.Anchor = AnchorStyles.None;
     }
 
     public static void Encabezados(DataGridView grid, params (string Nombre, string Encabezado)[] columnas)

@@ -10,7 +10,7 @@ partial class FrmEditInscripcion
     {
         cboEstudiante = new() { DropDownStyle = ComboBoxStyle.DropDownList, Dock = DockStyle.Fill };
         cboGrupo = new() { DropDownStyle = ComboBoxStyle.DropDownList, Dock = DockStyle.Fill };
-        lblDetalle = new Label { Dock = DockStyle.Fill, AutoSize = false, Padding = new Padding(16), ForeColor = Ui.Navy, BackColor = Ui.LightBlue, Font = new Font("Segoe UI", 11F, FontStyle.Bold) };
+        lblDetalle = new Label { Dock = DockStyle.Fill, AutoSize = false, Padding = new Padding(16), TextAlign = ContentAlignment.MiddleLeft, ForeColor = Ui.Navy, BackColor = Ui.LightBlue, Font = new Font("Segoe UI", 11F, FontStyle.Bold) };
         btnGuardar = Ui.BotonPrimario("Confirmar inscripción"); btnCancelar = Ui.BotonCancelar();
         var seleccion = Campos(("Estudiante", cboEstudiante), ("Grupo de estudio", cboGrupo));
         var resumen = new GroupBox { Text = "Resumen de compatibilidad", Dock = DockStyle.Fill, ForeColor = Ui.Navy, Padding = new Padding(12), Font = new Font("Segoe UI", 10F, FontStyle.Bold), Controls = { lblDetalle } };
