@@ -24,6 +24,8 @@ public static class TListaEstudiante
         if (TListaInscripcion.PorEstudiante(estudiante.Codigo).Any() &&
             !TListaInscripcion.CompatibleConCambios(estudiante, estudiante.Codigo, out var motivo))
             return ResultadoOperacion.Error(motivo);
+        if (TCompatibilidadHorario.EstudianteTieneConflictos(estudiante, out motivo))
+            return ResultadoOperacion.Error(motivo);
         actual.Nombres = estudiante.Nombres;
         actual.Apellidos = estudiante.Apellidos;
         actual.Carrera = estudiante.Carrera;

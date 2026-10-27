@@ -8,7 +8,7 @@ public partial class FrmEditEstudiante : Form
     private readonly bool editar;
     public FrmEditEstudiante(Estudiante? estudiante = null)
     {
-        editar = estudiante is not null; InitializeComponent(); Ui.Preparar(this, editar ? "Modificar estudiante" : "Nuevo estudiante"); ClientSize = new Size(720, 560); Ui.ConfigurarCampos(this);
+        editar = estudiante is not null; InitializeComponent(); Ui.Preparar(this, editar ? "Modificar estudiante" : "Nuevo estudiante"); ClientSize = new Size(820, 650); MinimumSize = new Size(760, 600);
         if (estudiante is not null)
         {
             txtCodigo.Text = estudiante.Codigo.ToString(); txtCodigo.Enabled = false; txtNombres.Text = estudiante.Nombres;
