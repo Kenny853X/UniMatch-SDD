@@ -141,7 +141,10 @@ public class ReglasUniMatchTests
         var resultado = TListaGrupoEstudio.Modificar(cambio);
 
         Assert.False(resultado.Exito);
-        Assert.Contains("superpuestas", resultado.Mensaje, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains(
+    "conflicto",
+    resultado.Mensaje,
+    StringComparison.OrdinalIgnoreCase);
         Assert.Equal(new TimeOnly(11, 0), TListaGrupoEstudio.Buscar(2)!.HoraInicio);
     }
 

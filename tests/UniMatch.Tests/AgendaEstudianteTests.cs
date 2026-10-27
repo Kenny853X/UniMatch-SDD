@@ -8,6 +8,7 @@ public class AgendaEstudianteTests
 {
     public AgendaEstudianteTests() => Limpiar();
 
+   
     [Fact]
     public void ConstruyeAgendaConVariasInscripcionesYCalculaHoras()
     {
@@ -98,9 +99,15 @@ public class AgendaEstudianteTests
         HoraFin = new TimeOnly(18, 0)
     };
 
-    private static void AgregarGrupo(int codigo, string nombre, string dia, TimeOnly inicio, TimeOnly fin)
+
+    private static void AgregarGrupo(
+        int codigo,
+        string nombre,
+        string dia,
+        TimeOnly inicio,
+        TimeOnly fin)
     {
-        Assert.True(TListaGrupoEstudio.Agregar(new GrupoEstudio
+        var resultado = TListaGrupoEstudio.Agregar(new GrupoEstudio
         {
             Codigo = codigo,
             Nombre = nombre,
@@ -110,8 +117,12 @@ public class AgendaEstudianteTests
             HoraFin = fin,
             Modalidad = "Virtual",
             CupoMaximo = 5
-        }).Exito);
+        });
+
+        Assert.True(resultado.Exito,
+            $"No se pudo agregar el grupo {codigo}: {resultado.Mensaje}");
     }
+
 
     private static void Limpiar()
     {
