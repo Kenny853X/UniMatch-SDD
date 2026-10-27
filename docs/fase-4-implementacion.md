@@ -15,6 +15,7 @@ La solución se implementó con .NET 8 Windows Forms y almacenamiento en memoria
 - GitHub Actions en Windows para restaurar, compilar y ejecutar pruebas.
 - Datos de ejemplo cargados una sola vez al iniciar la aplicación.
 - Panel principal con contadores reales y tablas con encabezados, filas y acciones diferenciadas.
+- Detección centralizada de conflictos de horarios mediante `TCompatibilidadHorario`.
 
 La información se pierde al cerrar la aplicación, conforme al alcance de la Fase 2.
 
@@ -30,6 +31,12 @@ Incluye 10 estudiantes, 6 grupos y 9 inscripciones válidas. El conjunto contien
 - Estudiantes con horarios incompatibles con algunos grupos para probar rechazos.
 
 Para iniciar la aplicación sin datos de ejemplo, cambie `DatosEjemplo.Habilitados` a `false` antes de la llamada a `DatosEjemplo.Cargar()` en `Program.cs`. Las listas continuarán funcionando normalmente para registrar datos manualmente.
+
+## MF04: conflictos de horarios
+
+`TCompatibilidadHorario.SeSuperponen` aplica la regla `inicioA < finB && finA > inicioB` únicamente cuando los días coinciden. Por eso un grupo que termina a las 11:00 y otro que comienza a las 11:00 son consecutivos y válidos. `TListaInscripcion.Registrar` rechaza el conflicto antes de modificar la lista y muestra el grupo y horario implicados.
+
+Al modificar un grupo, `TListaGrupoEstudio.Modificar` valida primero la compatibilidad de sus participantes y luego comprueba sus conflictos con las demás inscripciones del estudiante, excluyendo el propio grupo. Si falla, el objeto almacenado no se modifica. La carga de ejemplo usa horarios consecutivos para que las nueve inscripciones previstas se registren correctamente; si alguna fallara, `DatosEjemplo.Cargar()` lanza una excepción explícita en lugar de ocultarla.
 
 ## Spec Kit y Copilot
 
@@ -49,6 +56,7 @@ No se instaló la CLI de Spec Kit porque la estructura documental requerida se p
 | `git merge --no-edit origin/main` | Correcto; integración fast-forward de `docs/plan-tecnico.md`, conservando historial. |
 | `dotnet test UniMatch.sln` | Restauró y compiló los proyectos, pero el testhost no pudo ejecutarse en Linux porque el entorno solo tiene runtime .NET 10 y el proyecto requiere runtime .NET 8. |
 | `dotnet build UniMatch.sln --configuration Release` | Debe ejecutarse en Windows o con el runtime Windows Desktop correspondiente. |
+| `DOTNET_ROLL_FORWARD=Major dotnet test UniMatch.sln --no-restore` | No pudo ejecutar el testhost porque tampoco está instalado `Microsoft.WindowsDesktop.App` 8.0 en este entorno Linux. |
 
 ## Verificaciones pendientes
 
@@ -56,3 +64,4 @@ No se instaló la CLI de Spec Kit porque la estructura documental requerida se p
 - Abrir la solución en Visual Studio y revisar visualmente los formularios y sus archivos Designer.
 - Ejecutar los casos CV15 y CV29 de navegación/presentación en Windows.
 - Confirmar en GitHub Actions la ejecución real del workflow sobre `windows-latest`.
+- Revisar visualmente los formularios en Windows con escalas de 100 %, 125 % y 150 %.

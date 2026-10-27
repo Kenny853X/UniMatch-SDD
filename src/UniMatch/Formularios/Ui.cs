@@ -14,7 +14,7 @@ internal static class Ui
     public static void Preparar(Form form, string titulo)
     {
         form.Text = titulo; form.StartPosition = FormStartPosition.CenterScreen;
-        form.MinimumSize = new Size(900, 560); form.BackColor = Color.FromArgb(247, 249, 252);
+        form.MinimumSize = new Size(760, 480); form.BackColor = Color.FromArgb(247, 249, 252);
         form.Font = new Font("Segoe UI", 10F);
         form.AutoScaleMode = AutoScaleMode.Dpi;
     }
@@ -23,6 +23,13 @@ internal static class Ui
     {
         Text = texto, Dock = DockStyle.Top, Height = 64, Padding = new Padding(28, 16, 0, 0),
         Font = new Font("Segoe UI", 18F, FontStyle.Bold), ForeColor = Navy
+    };
+
+    public static Label EstadoVacio(string texto) => new()
+    {
+        Text = texto, Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleCenter,
+        ForeColor = Color.FromArgb(95, 105, 120), BackColor = Color.White,
+        Font = new Font("Segoe UI", 11F, FontStyle.Italic), Padding = new Padding(20)
     };
 
     public static Button Boton(string texto, bool peligro = false, bool secundario = false) => new()

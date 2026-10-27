@@ -27,6 +27,11 @@ public static class TListaInscripcion
             return ResultadoOperacion.Error("El grupo no tiene cupos disponibles.");
         if (!Compatible(estudiante, grupo, out var motivo))
             return ResultadoOperacion.Error(motivo);
+        if (TCompatibilidadHorario.BuscarConflicto(estudiante, grupo, out var grupoConflicto))
+        {
+            return ResultadoOperacion.Error(
+                $"El estudiante ya tiene una reunión superpuesta con {TCompatibilidadHorario.Describir(grupoConflicto!)}.");
+        }
 
         Lista.Add(new Inscripcion { CodigoEstudiante = codigoEstudiante, CodigoGrupo = codigoGrupo });
         return ResultadoOperacion.Correcto("Inscripción registrada correctamente.");
@@ -83,6 +88,25 @@ public static class TListaInscripcion
             if (estudiante is not null && !Compatible(estudiante, grupo, out motivo))
                 return false;
         }
+        motivo = string.Empty;
+        return true;
+    }
+
+    public static bool SinConflictosDeHorario(GrupoEstudio grupo, out string motivo)
+    {
+        foreach (var inscripcion in PorGrupo(grupo.Codigo))
+        {
+            var estudiante = TListaEstudiante.Buscar(inscripcion.CodigoEstudiante);
+            if (estudiante is null) continue;
+
+            if (TCompatibilidadHorario.BuscarConflicto(estudiante, grupo, out var conflicto))
+            {
+                motivo = $"El estudiante {estudiante.NombreCompleto} tendría conflicto entre " +
+                    $"{TCompatibilidadHorario.Describir(grupo)} y {TCompatibilidadHorario.Describir(conflicto!)}.";
+                return false;
+            }
+        }
+
         motivo = string.Empty;
         return true;
     }
