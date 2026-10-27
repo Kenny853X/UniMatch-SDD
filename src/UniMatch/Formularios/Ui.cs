@@ -176,7 +176,7 @@ internal static class Ui
         button.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
         button.Padding = new Padding(10, 0, 10, 0);
         button.Margin = new Padding(6);
-        button.Anchor = AnchorStyles.None;
+        button.Anchor = AnchorStyles.Left | AnchorStyles.Top;
     }
 
     public static void Encabezados(DataGridView grid, params (string Nombre, string Encabezado)[] columnas)
