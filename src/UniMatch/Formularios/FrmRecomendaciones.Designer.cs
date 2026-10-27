@@ -62,22 +62,23 @@ partial class FrmRecomendaciones
             Dock = DockStyle.Fill,
             ColumnCount = 1,
             RowCount = 4,
-            Padding = new Padding(14, 8, 14, 8),
-            BackColor = Ui.Surface,
-            RowStyles =
-            {
-                new RowStyle(SizeType.Absolute, 32),
-                new RowStyle(SizeType.Percent, 33.33F),
-                new RowStyle(SizeType.Percent, 33.33F),
-                new RowStyle(SizeType.Percent, 33.34F)
-            }
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            Padding = new Padding(14, 12, 14, 12),
+            BackColor = Ui.Surface
         };
+
+        for (int i = 0; i < 4; i++)
+        {
+            tarjetaContenido.RowStyles.Add(
+                new RowStyle(SizeType.AutoSize)
+            );
+        }
+
         tarjetaContenido.Controls.Add(lblNombre, 0, 0);
         tarjetaContenido.Controls.Add(lblCarrera, 0, 1);
         tarjetaContenido.Controls.Add(lblAsignatura, 0, 2);
         tarjetaContenido.Controls.Add(lblDisponibilidad, 0, 3);
-        var tarjeta = Ui.Tarjeta(tarjetaContenido);
-        tarjeta.Margin = new Padding(18, 10, 18, 10);
 
         var resumen = new TableLayoutPanel
         {
@@ -123,13 +124,12 @@ partial class FrmRecomendaciones
         };
         contenido.Controls.Add(encabezado, 0, 0);
         contenido.Controls.Add(selector, 0, 1);
-        contenido.Controls.Add(tarjeta, 0, 2);
+        contenido.Controls.Add(tarjetaContenido, 0, 2);
         contenido.Controls.Add(resumen, 0, 3);
         contenido.Controls.Add(Ui.ContenedorTabla(grid, lblEstado), 0, 4);
         contenido.Controls.Add(acciones, 0, 5);
         Controls.Add(contenido);
         Ui.ConfigurarTabla(grid);
-
         cboEstudiante.SelectedIndexChanged += (_, _) => ActualizarSeleccion();
         btnActualizar.Click += (_, _) => ActualizarSeleccion();
         btnRegresar.Click += (_, _) => Close();
@@ -139,12 +139,17 @@ partial class FrmRecomendaciones
     private static Label Info(string texto, bool destacado = false) => new()
     {
         Text = texto,
-        AutoSize = false,
-        Dock = DockStyle.Fill,
+        AutoSize = true,
+        Dock = DockStyle.None,
         ForeColor = destacado ? Ui.Navy : Ui.Text,
-        Font = new Font("Segoe UI", destacado ? 13F : 10F, destacado ? FontStyle.Bold : FontStyle.Regular),
+        Font = new Font(
+        "Segoe UI",
+        destacado ? 13F : 10F,
+        destacado ? FontStyle.Bold : FontStyle.Regular
+    ),
         TextAlign = ContentAlignment.MiddleLeft,
-        AutoEllipsis = true,
-        Margin = new Padding(0)
+        AutoEllipsis = false,
+        Margin = new Padding(0, 5, 0, 5),
+        Anchor = AnchorStyles.Left
     };
 }
