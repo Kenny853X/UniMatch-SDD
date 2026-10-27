@@ -27,8 +27,8 @@ partial class FrmPrincipal
             button.ForeColor = Color.White;
             button.FlatAppearance.MouseOverBackColor = Color.FromArgb(38, 72, 112);
         }
-        btnAgenda.Enabled = true; btnReportes.Enabled = false;
-        btnAgenda.Enabled = false;
+        btnAgenda.Enabled = true;
+        btnReportes.Enabled = true;
         lblEstudiantes = Contador("0", "Estudiantes");
         lblGrupos = Contador("0", "Grupos de estudio");
         lblInscripciones = Contador("0", "Inscripciones");
