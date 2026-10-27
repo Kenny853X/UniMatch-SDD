@@ -7,7 +7,10 @@ public partial class FrmAdminGrupos : Form
     public FrmAdminGrupos() { InitializeComponent(); Ui.Preparar(this, "Grupos"); ClientSize = new Size(1280, 680); Load += (_, _) => Cargar(); }
     private void Cargar(string texto = "")
     {
-        grid.DataSource = TListaGrupoEstudio.BuscarPorAsignatura(texto).Select(x => new { x.Codigo, x.Nombre, x.Asignatura, x.Dia, Horario = x.HoraInicio.ToString("HH:mm") + " - " + x.HoraFin.ToString("HH:mm"), x.Modalidad, x.CupoMaximo, Participantes = TListaGrupoEstudio.Participantes(x.Codigo), Disponibles = TListaGrupoEstudio.CuposDisponibles(x) }).ToList();
+        var grupos = TListaGrupoEstudio.BuscarPorAsignatura(texto).ToList();
+        grid.DataSource = grupos.Select(x => new { x.Codigo, x.Nombre, x.Asignatura, x.Dia, Horario = x.HoraInicio.ToString("HH:mm") + " - " + x.HoraFin.ToString("HH:mm"), x.Modalidad, x.CupoMaximo, Participantes = TListaGrupoEstudio.Participantes(x.Codigo), Disponibles = TListaGrupoEstudio.CuposDisponibles(x) }).ToList();
+        lblEstado.Visible = grupos.Count == 0;
+        if (lblEstado.Visible) lblEstado.BringToFront();
         Ui.Encabezados(grid, ("Codigo", "Código"), ("Nombre", "Grupo"), ("Asignatura", "Asignatura"), ("Dia", "Día"), ("Horario", "Horario"), ("Modalidad", "Modalidad"), ("CupoMaximo", "Cupo máximo"), ("Participantes", "Inscritos"), ("Disponibles", "Cupos disponibles"));
     }
     private int? Seleccionado() => grid.CurrentRow?.Cells["Codigo"].Value is int codigo ? codigo : null;

@@ -8,6 +8,8 @@ public partial class FrmAdminInscripciones : Form
     private void Cargar()
     {
         grid.DataSource = TListaInscripcion.Lista.Select(i => { var e = TListaEstudiante.Buscar(i.CodigoEstudiante)!; var g = TListaGrupoEstudio.Buscar(i.CodigoGrupo)!; return new { CodigoEstudiante = e.Codigo, Estudiante = e.NombreCompleto, CodigoGrupo = g.Codigo, Grupo = g.Nombre, g.Asignatura, Dia = g.Dia, Horario = g.HoraInicio.ToString("HH:mm") + " - " + g.HoraFin.ToString("HH:mm") }; }).ToList();
+        lblEstado.Visible = TListaInscripcion.Lista.Count == 0;
+        if (lblEstado.Visible) lblEstado.BringToFront();
         Ui.Encabezados(grid, ("CodigoEstudiante", "Código estudiante"), ("Estudiante", "Estudiante"), ("CodigoGrupo", "Código grupo"), ("Grupo", "Grupo"), ("Asignatura", "Asignatura"), ("Dia", "Día"), ("Horario", "Horario"));
     }
     private void CancelarClick(object? sender, EventArgs e)

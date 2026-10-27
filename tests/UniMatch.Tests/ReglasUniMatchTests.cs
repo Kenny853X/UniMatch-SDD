@@ -67,4 +67,111 @@ public class ReglasUniMatchTests
         TListaEstudiante.Agregar(estudiante); TListaGrupoEstudio.Agregar(GrupoBase());
         Assert.True(TListaInscripcion.Registrar(1, 1).Exito);
     }
+
+    [Fact]
+    public void RechazaInscripcionConHorarioSuperpuesto()
+    {
+        TListaEstudiante.Agregar(EstudianteBase());
+        TListaGrupoEstudio.Agregar(GrupoBase(1));
+        var segundo = GrupoBase(2);
+        segundo.Nombre = "Grupo superpuesto";
+        segundo.HoraInicio = new TimeOnly(10, 30);
+        segundo.HoraFin = new TimeOnly(11, 30);
+        TListaGrupoEstudio.Agregar(segundo);
+
+        Assert.True(TListaInscripcion.Registrar(1, 1).Exito);
+        var resultado = TListaInscripcion.Registrar(1, 2);
+
+        Assert.False(resultado.Exito);
+        Assert.Contains("superpuesta", resultado.Mensaje, StringComparison.OrdinalIgnoreCase);
+        Assert.Single(TListaInscripcion.Lista);
+    }
+
+    [Fact]
+    public void AceptaHorariosConsecutivos()
+    {
+        TListaEstudiante.Agregar(EstudianteBase());
+        TListaGrupoEstudio.Agregar(GrupoBase(1));
+        var segundo = GrupoBase(2);
+        segundo.Nombre = "Grupo consecutivo";
+        segundo.HoraInicio = new TimeOnly(11, 0);
+        segundo.HoraFin = new TimeOnly(12, 0);
+        TListaGrupoEstudio.Agregar(segundo);
+
+        Assert.True(TListaInscripcion.Registrar(1, 1).Exito);
+        Assert.True(TListaInscripcion.Registrar(1, 2).Exito);
+    }
+
+    [Fact]
+    public void HorariosDeDistintosDiasNoSeSuperponenPeroSeValidaDisponibilidad()
+    {
+        var estudiante = EstudianteBase();
+        TListaEstudiante.Agregar(estudiante);
+        var grupoLunes = GrupoBase(1);
+        TListaGrupoEstudio.Agregar(grupoLunes);
+        var grupoMartes = GrupoBase(2);
+        grupoMartes.Dia = "Martes";
+        TListaGrupoEstudio.Agregar(grupoMartes);
+
+        Assert.False(TCompatibilidadHorario.SeSuperponen(grupoLunes, grupoMartes));
+        Assert.True(TListaInscripcion.Registrar(1, 1).Exito);
+        var resultado = TListaInscripcion.Registrar(1, 2);
+
+        Assert.False(resultado.Exito);
+        Assert.Contains("día disponible", resultado.Mensaje, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void RechazaModificarGrupoSiProvocaConflictoYConservaDatos()
+    {
+        TListaEstudiante.Agregar(EstudianteBase());
+        TListaGrupoEstudio.Agregar(GrupoBase(1));
+        var segundo = GrupoBase(2);
+        segundo.Nombre = "Grupo consecutivo";
+        segundo.HoraInicio = new TimeOnly(11, 0);
+        segundo.HoraFin = new TimeOnly(12, 0);
+        TListaGrupoEstudio.Agregar(segundo);
+        Assert.True(TListaInscripcion.Registrar(1, 1).Exito);
+        Assert.True(TListaInscripcion.Registrar(1, 2).Exito);
+
+        var cambio = GrupoBase(2);
+        cambio.Nombre = "Cambio incompatible";
+        cambio.HoraInicio = new TimeOnly(10, 30);
+        cambio.HoraFin = new TimeOnly(11, 30);
+        var resultado = TListaGrupoEstudio.Modificar(cambio);
+
+        Assert.False(resultado.Exito);
+        Assert.Contains("superpuestas", resultado.Mensaje, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(new TimeOnly(11, 0), TListaGrupoEstudio.Buscar(2)!.HoraInicio);
+    }
+
+    [Fact]
+    public void AceptaModificarGrupoSinConflictoConsigoMismo()
+    {
+        TListaEstudiante.Agregar(EstudianteBase());
+        var grupo = GrupoBase();
+        TListaGrupoEstudio.Agregar(grupo);
+        Assert.True(TListaInscripcion.Registrar(1, 1).Exito);
+
+        grupo = GrupoBase();
+        grupo.Nombre = "Mismo grupo ajustado";
+        grupo.HoraInicio = new TimeOnly(9, 30);
+        grupo.HoraFin = new TimeOnly(11, 30);
+        var resultado = TListaGrupoEstudio.Modificar(grupo);
+
+        Assert.True(resultado.Exito);
+        Assert.Equal("Mismo grupo ajustado", TListaGrupoEstudio.Buscar(1)!.Nombre);
+    }
+
+    [Fact]
+    public void CargaTodasLasInscripcionesDeEjemplo()
+    {
+        DatosEjemplo.Cargar();
+
+        Assert.Equal(10, TListaEstudiante.Lista.Count);
+        Assert.Equal(6, TListaGrupoEstudio.Lista.Count);
+        Assert.Equal(9, TListaInscripcion.Lista.Count);
+        Assert.Equal(0, TListaGrupoEstudio.Participantes(105));
+        Assert.Equal(0, TListaGrupoEstudio.CuposDisponibles(TListaGrupoEstudio.Buscar(101)!));
+    }
 }

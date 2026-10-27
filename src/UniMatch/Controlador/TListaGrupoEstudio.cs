@@ -25,6 +25,8 @@ public static class TListaGrupoEstudio
         if (!validacion.Exito) return validacion;
         if (!TListaInscripcion.CompatibleConCambios(grupo, out var motivo))
             return ResultadoOperacion.Error(motivo);
+        if (!TListaInscripcion.SinConflictosDeHorario(grupo, out motivo))
+            return ResultadoOperacion.Error(motivo);
         actual.Nombre = grupo.Nombre; actual.Asignatura = grupo.Asignatura; actual.Dia = grupo.Dia;
         actual.HoraInicio = grupo.HoraInicio; actual.HoraFin = grupo.HoraFin; actual.Modalidad = grupo.Modalidad; actual.CupoMaximo = grupo.CupoMaximo;
         return ResultadoOperacion.Correcto("Grupo actualizado correctamente.");

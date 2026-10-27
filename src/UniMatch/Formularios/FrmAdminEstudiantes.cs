@@ -8,6 +8,8 @@ public partial class FrmAdminEstudiantes : Form
     private void Cargar()
     {
         grid.DataSource = TListaEstudiante.Lista.Select(x => new { x.Codigo, x.Nombres, x.Apellidos, x.Carrera, x.Asignatura, x.DiaDisponible, x.HoraInicio, x.HoraFin }).ToList();
+        lblEstado.Visible = TListaEstudiante.Lista.Count == 0;
+        if (lblEstado.Visible) lblEstado.BringToFront();
         Ui.Encabezados(grid, ("Codigo", "Código"), ("Nombres", "Nombres"), ("Apellidos", "Apellidos"), ("Carrera", "Carrera"), ("Asignatura", "Asignatura"), ("DiaDisponible", "Día disponible"), ("HoraInicio", "Inicio"), ("HoraFin", "Fin"));
     }
     private int? Seleccionado() => grid.CurrentRow?.Cells["Codigo"].Value is int codigo ? codigo : null;

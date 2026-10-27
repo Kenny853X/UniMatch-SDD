@@ -9,7 +9,10 @@ public static class DatosEjemplo
 
     public static void Cargar()
     {
-        if (!Habilitados || cargados) return;
+        if (!Habilitados) return;
+        if (cargados && TListaEstudiante.Lista.Count > 0) return;
+        if (TListaEstudiante.Lista.Count > 0 || TListaGrupoEstudio.Lista.Count > 0 || TListaInscripcion.Lista.Count > 0)
+            return;
 
         var estudiantes = new[]
         {
@@ -29,7 +32,7 @@ public static class DatosEjemplo
         var grupos = new[]
         {
             G(101, "Programación desde cero", "Programación", "Lunes", 9, 11, "Presencial", 2),
-            G(102, "Laboratorio de algoritmos", "Programación", "Lunes", 10, 12, "Virtual", 4),
+            G(102, "Laboratorio de algoritmos", "Programación", "Lunes", 11, 12, "Virtual", 4),
             G(103, "Cálculo aplicado", "Matemática", "Martes", 15, 17, "Presencial", 3),
             G(104, "Diseño de bases relacionales", "Bases de Datos", "Miércoles", 9, 11, "Virtual", 2),
             G(105, "Redes para principiantes", "Redes", "Jueves", 16, 18, "Presencial", 3),
@@ -41,7 +44,12 @@ public static class DatosEjemplo
         {
             (1, 101), (2, 101), (1, 102), (6, 102),
             (3, 103), (9, 103), (4, 104), (10, 104), (7, 106)
-        }) TListaInscripcion.Registrar(estudiante, grupo);
+        })
+        {
+            var resultado = TListaInscripcion.Registrar(estudiante, grupo);
+            if (!resultado.Exito)
+                throw new InvalidOperationException($"No se pudo cargar la inscripción de ejemplo {estudiante}-{grupo}: {resultado.Mensaje}");
+        }
 
         cargados = true;
     }
