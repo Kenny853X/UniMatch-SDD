@@ -2,12 +2,49 @@ using UniMatch.Entidades;
 
 namespace UniMatch.Controlador;
 
+public enum FiltroDisponibilidad
+{
+    Todos,
+    Disponibles,
+    Llenos
+}
+
 public static class TListaGrupoEstudio
 {
     public static List<GrupoEstudio> Lista { get; } = [];
     public static GrupoEstudio? Buscar(int codigo) => Lista.FirstOrDefault(x => x.Codigo == codigo);
     public static IEnumerable<GrupoEstudio> BuscarPorAsignatura(string texto) =>
         string.IsNullOrWhiteSpace(texto) ? Lista : Lista.Where(x => x.Asignatura.Contains(texto.Trim(), StringComparison.OrdinalIgnoreCase));
+
+    public static IEnumerable<GrupoEstudio> BuscarAvanzado(
+        string? asignatura = null,
+        string? dia = null,
+        string? modalidad = null,
+        TimeOnly? horaInicio = null,
+        TimeOnly? horaFin = null,
+        FiltroDisponibilidad disponibilidad = FiltroDisponibilidad.Todos)
+    {
+        if (horaInicio.HasValue && horaFin.HasValue && horaInicio.Value > horaFin.Value)
+            return [];
+
+        var consulta = Lista.AsEnumerable();
+        if (!string.IsNullOrWhiteSpace(asignatura))
+            consulta = consulta.Where(x => x.Asignatura.Contains(asignatura.Trim(), StringComparison.OrdinalIgnoreCase));
+        if (!string.IsNullOrWhiteSpace(dia))
+            consulta = consulta.Where(x => string.Equals(x.Dia.Trim(), dia.Trim(), StringComparison.OrdinalIgnoreCase));
+        if (!string.IsNullOrWhiteSpace(modalidad))
+            consulta = consulta.Where(x => string.Equals(x.Modalidad.Trim(), modalidad.Trim(), StringComparison.OrdinalIgnoreCase));
+        if (horaInicio.HasValue)
+            consulta = consulta.Where(x => x.HoraInicio >= horaInicio.Value);
+        if (horaFin.HasValue)
+            consulta = consulta.Where(x => x.HoraFin <= horaFin.Value);
+        if (disponibilidad == FiltroDisponibilidad.Disponibles)
+            consulta = consulta.Where(x => CuposDisponibles(x) > 0);
+        else if (disponibilidad == FiltroDisponibilidad.Llenos)
+            consulta = consulta.Where(x => CuposDisponibles(x) <= 0);
+
+        return consulta;
+    }
 
     public static ResultadoOperacion Agregar(GrupoEstudio grupo)
     {
