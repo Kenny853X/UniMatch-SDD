@@ -25,6 +25,7 @@ Para el desarrollo de UniMatch se utilizarán las siguientes herramientas:
 | C# | Lenguaje de programación de la aplicación. |
 | Windows Forms | Creación de las ventanas e interfaz gráfica. |
 | Visual Studio 2026 | Entorno para desarrollar, ejecutar y revisar el programa. |
+| .NET 8 (Windows Desktop) | Plataforma LTS utilizada para ejecutar la aplicación y Windows Forms. |
 | .NET | Plataforma utilizada para ejecutar la aplicación. Su versión se definirá al crear el proyecto. |
 | Git | Registro y control de los cambios realizados. |
 | GitHub | Almacenamiento del proyecto y trabajo colaborativo. |
@@ -153,6 +154,7 @@ El desarrollo de la aplicación se organizará en las siguientes actividades:
 
 **Actividad 1. Preparación del proyecto**
 
+Se creó la solución `UniMatch.sln` con un proyecto Windows Forms `net8.0-windows` y un proyecto de pruebas compatible. Se establecieron las carpetas Entidades, Controlador y Formularios y se comprobó la compilación.
 Se creará la solución UniMatch en Visual Studio y se establecerán las carpetas Entidades, Controlador y Formularios. También se comprobará que el proyecto pueda compilarse correctamente.
 
 **Actividad 2. Desarrollo del módulo de estudiantes**
